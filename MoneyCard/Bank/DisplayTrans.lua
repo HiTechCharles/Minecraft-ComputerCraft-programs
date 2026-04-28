@@ -1,35 +1,61 @@
-function LoadCard ()  --get card name pin and balance
-	f = io.open(CardLocation, "r")  --open file for reading 
-	Name=f.read(f)  --read data name, pin, money 
-	Pin=f.read(f)
-	Pin=Pin+0
-	DM=f.read(f)
-	Money=DM / Pin
-	io.close(f)  --close file 
-end
+local Bank = dofile("BankCore.lua")
 
-rednet.open("back")
+local drive = peripheral.wrap("left")
+local cb = peripheral.wrap("right")
+
 term.clear()
 term.setCursorPos(1,1)
-local i = 0
-local TotalLines = 0
-for line in io.lines("disk/Statement") do
-    print(line)
-    i = i + 1
-    TotalLines=TotalLines+1
-    if i/17==1 then
-        term.write("---------- PRESS ENTER FOR MORE ----------")
-        io.read()
-        term.clear()
-        term.setCursorPos(1,1)
-        I=0
-    end    
+print("=== Disability Bank — Transaction History ===")
+print("Insert your card to continue")
+
+-- Wait for card
+while not Bank.cardPresent() do
+    sleep(0.2)
 end
-CardLocation = "disk/CardInfo"
-LoadCard() 
-print("Total lines in file:  "..TotalLines)
-print("\n")
-CurDate=os.date("%D %r")  --06/13/1983 08:05:44 PM  date and time 
-LogString=CurDate.." | "..Name.." checked statement containing "..TotalLines.." entries\n"
-rednet.send(1, LogString)
- 
+
+-- Load card
+local card, err = Bank.loadCard()
+if not card then
+    print("\nError reading card: " .. err)
+    drive.ejectDisk()
+    return
+end
+
+term.clear()
+term.setCursorPos(1,1)
+print("Transaction History for " .. card.name)
+print("----------------------------------------")
+
+-- Read statement file
+local path = "disk/Statement"
+
+if not fs.exists(path) then
+    print("\nNo transactions found.")
+    drive.ejectDisk()
+    return
+end
+
+local f = fs.open(path, "r")
+local line = f.readLine()
+local count = 0
+
+while line do
+    print(line)
+    count = count + 1
+    line = f.readLine()
+end
+
+f.close()
+
+if count == 0 then
+    print("\nNo transactions recorded.")
+else
+	print ("Total transactions:  "..count)
+end
+os.sleep(count *2.5)
+
+print("\n----------------------------------------")
+print("End of statement.")
+print("Returning your card.")
+
+drive.ejectDisk()

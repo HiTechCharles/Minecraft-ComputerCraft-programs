@@ -17,5 +17,3 @@ end
 
 print("Total lines in file:  "..TotalLines)
 print("\n")
-
-

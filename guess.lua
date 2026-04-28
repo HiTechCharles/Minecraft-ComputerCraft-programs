@@ -21,6 +21,7 @@ while ( Guess ~= number ) do
     print("Too low")
   else
     print("That's right!")
+	print ("It took "..Tries .." to win.")
     os.exit()
   end
 end
