@@ -1,3 +1,6 @@
+--display a file on the screen, similar to less on linux
+--after each screen is full, pres enter to see net page
+
 term.clear()
 term.setCursorPos(1,1)
 local i = 0

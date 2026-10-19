@@ -1,3 +1,6 @@
+--simple number guessing game.  the highest number
+--can be chosen.
+
 print("Guess-A-Number by Charles Martin")
 
 io.write("\nHow high can the number go?  ")
@@ -25,4 +28,3 @@ while ( Guess ~= number ) do
     os.exit()
   end
 end
-  

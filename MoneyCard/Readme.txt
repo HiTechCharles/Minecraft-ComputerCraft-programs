@@ -35,6 +35,3 @@ Vending		vending.lua, BankCore.lua
 			Also a file called ItemsToSell that contains:
 			line 1:  item name  example banana bread
 			line 2:  price example 1.75, no $ signs please
-			
-	
-	
